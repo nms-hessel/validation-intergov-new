@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./style.css"; // Zorg ervoor dat je style.css in public hebt staan!
 
 export default function SIRValidationTool() {
   const [step, setStep] = useState(0);
@@ -95,35 +96,35 @@ export default function SIRValidationTool() {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
-      <div className="border rounded-lg shadow-lg p-6">
+    <div className="sir-validation-tool">
+      <div className="form-container">
         {!reportGenerated ? (
           <>
-            <h1 className="text-xl font-bold mb-2">{steps[step].title}</h1>
-            <p className="mb-4">{steps[step].description}</p>
+            <h1 className="form-title">{steps[step].title}</h1>
+            <p className="form-description">{steps[step].description}</p>
 
             <textarea
               value={formData[steps[step].field]}
               onChange={(e) => handleInputChange(steps[step].field, e.target.value)}
               placeholder="Schrijf je antwoord hier..."
-              className="p-2 border rounded w-full mb-4"
+              className="form-textarea"
             />
 
-            <div className="flex justify-between">
+            <div className="button-container">
               <button
                 onClick={previousStep}
                 disabled={step === 0}
-                className="p-2 bg-gray-500 text-white rounded disabled:opacity-50"
+                className="button button-secondary"
               >
                 Vorige
               </button>
 
               {step < steps.length - 1 ? (
-                <button onClick={nextStep} className="p-2 bg-blue-500 text-white rounded">
+                <button onClick={nextStep} className="button button-primary">
                   Volgende
                 </button>
               ) : (
-                <button onClick={generateReport} className="p-2 bg-green-500 text-white rounded">
+                <button onClick={generateReport} className="button button-success">
                   Rapport genereren
                 </button>
               )}
@@ -131,20 +132,17 @@ export default function SIRValidationTool() {
           </>
         ) : (
           <>
-            <h1 className="text-xl font-bold mb-4">📋 Jouw Challenge Rapport</h1>
-            <div className="bg-gray-100 p-4 rounded">
+            <h1 className="form-title">📋 Jouw Challenge Rapport</h1>
+            <div className="report">
               {steps.map((step) => (
-                <div key={step.field} className="mb-4">
-                  <h2 className="font-bold">{step.title}</h2>
-                  <p>{formData[step.field] || "Geen antwoord"}</p>
+                <div key={step.field} className="report-section">
+                  <h2 className="report-title">{step.title}</h2>
+                  <p className="report-text">{formData[step.field] || "Geen antwoord"}</p>
                 </div>
               ))}
             </div>
 
-            <button
-              onClick={copyToClipboard}
-              className="mt-4 p-2 bg-blue-500 text-white rounded w-full"
-            >
+            <button onClick={copyToClipboard} className="button button-primary">
               📋 Kopieer naar klembord
             </button>
           </>
