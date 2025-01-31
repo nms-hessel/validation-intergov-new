@@ -13,6 +13,8 @@ export default function SIRValidationTool() {
     worth: "",
   });
 
+  const [reportGenerated, setReportGenerated] = useState(false);
+
   const steps = [
     {
       title: "Wat is het probleem?",
@@ -81,41 +83,72 @@ export default function SIRValidationTool() {
   };
 
   const generateReport = () => {
-    console.log("Generated report:", formData);
+    setReportGenerated(true);
+  };
+
+  const copyToClipboard = () => {
+    const reportText = steps
+      .map((step) => `${step.title}\n${formData[step.field] || "Geen antwoord"}\n`)
+      .join("\n");
+    navigator.clipboard.writeText(reportText);
+    alert("Rapport gekopieerd naar klembord!");
   };
 
   return (
     <div className="p-6 max-w-lg mx-auto">
       <div className="border rounded-lg shadow-lg p-6">
-        <h1 className="text-xl font-bold mb-2">{steps[step].title}</h1>
-        <p className="mb-4">{steps[step].description}</p>
-        
-        <textarea
-          value={formData[steps[step].field]}
-          onChange={(e) => handleInputChange(steps[step].field, e.target.value)}
-          placeholder="Schrijf je antwoord hier..."
-          className="p-2 border rounded w-full mb-4"
-        />
-        
-        <div className="flex justify-between">
-          <button
-            onClick={previousStep}
-            disabled={step === 0}
-            className="p-2 bg-gray-500 text-white rounded disabled:opacity-50"
-          >
-            Vorige
-          </button>
+        {!reportGenerated ? (
+          <>
+            <h1 className="text-xl font-bold mb-2">{steps[step].title}</h1>
+            <p className="mb-4">{steps[step].description}</p>
 
-          {step < steps.length - 1 ? (
-            <button onClick={nextStep} className="p-2 bg-blue-500 text-white rounded">
-              Volgende
+            <textarea
+              value={formData[steps[step].field]}
+              onChange={(e) => handleInputChange(steps[step].field, e.target.value)}
+              placeholder="Schrijf je antwoord hier..."
+              className="p-2 border rounded w-full mb-4"
+            />
+
+            <div className="flex justify-between">
+              <button
+                onClick={previousStep}
+                disabled={step === 0}
+                className="p-2 bg-gray-500 text-white rounded disabled:opacity-50"
+              >
+                Vorige
+              </button>
+
+              {step < steps.length - 1 ? (
+                <button onClick={nextStep} className="p-2 bg-blue-500 text-white rounded">
+                  Volgende
+                </button>
+              ) : (
+                <button onClick={generateReport} className="p-2 bg-green-500 text-white rounded">
+                  Rapport genereren
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="text-xl font-bold mb-4">📋 Jouw Challenge Rapport</h1>
+            <div className="bg-gray-100 p-4 rounded">
+              {steps.map((step) => (
+                <div key={step.field} className="mb-4">
+                  <h2 className="font-bold">{step.title}</h2>
+                  <p>{formData[step.field] || "Geen antwoord"}</p>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={copyToClipboard}
+              className="mt-4 p-2 bg-blue-500 text-white rounded w-full"
+            >
+              📋 Kopieer naar klembord
             </button>
-          ) : (
-            <button onClick={generateReport} className="p-2 bg-green-500 text-white rounded">
-              Rapport genereren
-            </button>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
