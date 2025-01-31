@@ -1,7 +1,12 @@
 import React from "react";
+import SIRValidationTool from "./SIRValidationTool";
 
 function App() {
-  return <h1>Validation Intergov is working!</h1>;
+  return (
+    <div>
+      <SIRValidationTool />
+    </div>
+  );
 }
 
 export default App;
