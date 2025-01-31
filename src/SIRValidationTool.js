@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./style.css"; // Zorg ervoor dat je style.css in public hebt staan!
 
 export default function SIRValidationTool() {
   const [step, setStep] = useState(0);
